@@ -9,11 +9,11 @@ graph TD
     
     subgraph Flow
         Start --> Menu[Show Menu]
-        Menu --> Write[1. Write]
-        Menu --> Display[2. Display]
-        Menu --> Save[3. Save]
-        Menu --> Load[4. Load]
-        Menu --> Quit[5. Quit]
+        Menu --> Write[1 - Write]
+        Menu --> Display[2 - Display]
+        Menu --> Save[3 - Save]
+        Menu --> Load[4 - Load]
+        Menu --> Quit[5 - Quit]
         Write --> GetPrompt --> SaveEntry --> Menu
         Display --> ShowEntries --> Menu
         Save --> WriteFile --> Menu
