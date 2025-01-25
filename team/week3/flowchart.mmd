@@ -1,0 +1,16 @@
+graph TD
+    A[Start] --> B[Show Menu]
+    B --> C[1 - Write]
+    B --> D[2 - Display] 
+    B --> E[3 - Save]
+    B --> F[4 - Load]
+    B --> G[5 - Quit]
+    C --> H[Get Prompt]
+    H --> I[Save Entry]
+    I --> B
+    D --> J[Show Entries]
+    J --> B
+    E --> K[Write File]
+    K --> B
+    F --> L[Read File]
+    L --> B

@@ -1,0 +1,21 @@
+classDiagram
+    class Journal {
+        -List~Entry~ entries
+        -string filename
+        +AddEntry()
+        +DisplayEntries()
+        +SaveToFile()
+        +LoadFromFile()
+    }
+    class Entry {
+        -string prompt
+        -string response
+        -string date
+        +GetFormattedEntry()
+    }
+    class PromptManager {
+        -List~string~ prompts
+        +GetRandomPrompt()
+    }
+    Journal "1" *-- "many" Entry
+    Journal "1" --> "1" PromptManager
