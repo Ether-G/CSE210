@@ -1,0 +1,21 @@
+graph TD
+    subgraph Classes
+        J["Journal<br>- entries: List<Entry><br>- filename: string<br>+ AddEntry()<br>+ DisplayEntries()<br>+ SaveToFile()<br>+ LoadFromFile()"]
+        E["Entry<br>- prompt: string<br>- response: string<br>- date: string<br>+ GetFormattedEntry()"]
+        P["PromptManager<br>- prompts: List<string><br>+ GetRandomPrompt()"]
+        J -->|contains| E
+        J -->|uses| P
+    end
+    
+    subgraph Flow
+        Start --> Menu[Show Menu]
+        Menu --> Write[1. Write]
+        Menu --> Display[2. Display]
+        Menu --> Save[3. Save]
+        Menu --> Load[4. Load]
+        Menu --> Quit[5. Quit]
+        Write --> GetPrompt --> SaveEntry --> Menu
+        Display --> ShowEntries --> Menu
+        Save --> WriteFile --> Menu
+        Load --> ReadFile --> Menu
+    end
