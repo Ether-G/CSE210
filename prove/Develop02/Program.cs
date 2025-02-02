@@ -1,3 +1,17 @@
+/*
+Exceeded requirements by adding:
+1. Mood tracking system - users can optionally record their mood with each entry
+2. Journal statistics - displays total number of entries and mood frequency
+3. Backwards compatibility - can still load old journal files
+4. Enhanced display - shows mood information when available
+5. Optional fields - mood tracking is optional, making the journal more flexible
+
+These features help users:
+- Track their emotional state over time
+- See patterns in their moods
+- Keep their journaling simple when desired
+*/
+
 class Program
 {
     static void Main(string[] args)

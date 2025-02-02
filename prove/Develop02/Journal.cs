@@ -27,9 +27,13 @@ public class Journal
         Console.WriteLine($"\nPrompt: {prompt}");
         Console.Write("> ");
         string response = Console.ReadLine();
+
+        Console.Write("How are you feeling? (Optional - press Enter to skip): ");
+        string mood = Console.ReadLine();
+
         string date = DateTime.Now.ToShortDateString();
 
-        Entry entry = new Entry(date, prompt, response);
+        Entry entry = new Entry(date, prompt, response, mood);
         _entries.Add(entry);
         
         Console.WriteLine("\nEntry added successfully!");
@@ -47,6 +51,21 @@ public class Journal
         foreach (Entry entry in _entries)
         {
             Console.WriteLine(entry.FormatForDisplay());
+        }
+
+        // Display statistics
+        Console.WriteLine("\n=== Journal Statistics ===");
+        Console.WriteLine($"Total Entries: {_entries.Count}");
+        
+        var moodEntries = _entries.Where(e => !string.IsNullOrEmpty(e.Mood));
+        if (moodEntries.Any())
+        {
+            Console.WriteLine("\nRecorded Moods:");
+            var moodGroups = moodEntries.GroupBy(e => e.Mood);
+            foreach (var group in moodGroups)
+            {
+                Console.WriteLine($"- {group.Key}: {group.Count()} times");
+            }
         }
     }
 
@@ -85,9 +104,10 @@ public class Journal
             foreach (string line in lines)
             {
                 string[] parts = line.Split("~|~");
-                if (parts.Length == 3)
+                if (parts.Length >= 3)
                 {
-                    Entry entry = new Entry(parts[0], parts[1], parts[2]);
+                    string mood = parts.Length > 3 ? parts[3] : "";
+                    Entry entry = new Entry(parts[0], parts[1], parts[2], mood);
                     _entries.Add(entry);
                 }
             }
