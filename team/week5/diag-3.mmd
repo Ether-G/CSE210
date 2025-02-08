@@ -1,0 +1,23 @@
+sequenceDiagram
+    participant U as User
+    participant P as Program
+    participant S as Scripture
+    participant R as Reference
+    participant W as Word
+
+    U->>P: Start Program
+    P->>R: Create Reference
+    P->>S: Create Scripture(reference, text)
+    S->>W: Create Words from text
+    
+    loop Until quit or complete
+        P->>S: GetDisplayText()
+        S->>R: GetDisplayText()
+        S->>W: GetDisplayText() for each word
+        P->>U: Display Scripture
+        U->>P: Press Enter/Quit
+        alt Enter Pressed
+            P->>S: HideRandomWords()
+            S->>W: Hide() selected words
+        end
+    end

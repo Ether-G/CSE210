@@ -1,0 +1,33 @@
+classDiagram
+    class Scripture {
+        -Reference _reference
+        -List~Word~ _words
+        -Random _random
+        +Scripture(Reference reference, string text)
+        +HideRandomWords(int numberToHide)void
+        +GetDisplayText()string
+        +IsCompletelyHidden()bool
+    }
+
+    class Reference {
+        -string _book
+        -int _chapter
+        -int _startVerse
+        -int _endVerse
+        +Reference(string book, int chapter, int verse)
+        +Reference(string book, int chapter, int startVerse, int endVerse)
+        +GetDisplayText()string
+    }
+
+    class Word {
+        -string _text
+        -bool _isHidden
+        +Word(string text)
+        +Hide()void
+        +Show()void
+        +IsHidden()bool
+        +GetDisplayText()string
+    }
+
+    Scripture --> Reference : has-a
+    Scripture --> Word : contains many
