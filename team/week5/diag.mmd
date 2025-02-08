@@ -1,0 +1,48 @@
+classDiagram
+    class Program {
+        +Main(string[] args)void
+    }
+
+    class Scripture {
+        -Reference _reference
+        -List~Word~ _words
+        -Random _random
+        +Scripture(Reference reference, string text)
+        +HideRandomWords(int numberToHide)void
+        +GetDisplayText()string
+        +IsCompletelyHidden()bool
+    }
+
+    class Reference {
+        -string _book
+        -int _chapter
+        -int _startVerse
+        -int _endVerse
+        +Reference(string book, int chapter, int verse)
+        +Reference(string book, int chapter, int startVerse, int endVerse)
+        +GetDisplayText()string
+    }
+
+    class Word {
+        -string _text
+        -bool _isHidden
+        +Word(string text)
+        +Hide()void
+        +Show()void
+        +IsHidden()bool
+        +GetDisplayText()string
+    }
+
+    %% Relationships
+    Program --> Scripture : uses
+    Scripture --> Reference : has-a
+    Scripture --> Word : contains many
+    
+    %% Notes for additional context
+    note for Program "Main Program Flow:\n1. Create scripture\n2. While not quit AND not hidden:\n   - Display scripture\n   - Get user input\n   - Hide words if enter pressed"
+    
+    note for Scripture "Responsibilities:\n1. Manage complete scripture\n2. Handle word hiding\n3. Track overall state"
+    
+    note for Reference "Handles both formats:\n1. Single verse (John 3:16)\n2. Verse range (Proverbs 3:5-6)"
+    
+    note for Word "Word States:\n1. Visible: shows actual text\n2. Hidden: shows underscores\nLength matches original word"
