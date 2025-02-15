@@ -5,48 +5,53 @@ public class ScriptureLoader
     private class ScriptureJson
     {
         private List<Book> _books;
-        public List<Book> books 
+        public List<Book> Books 
         { 
-            get { return _books; }
-            set { _books = value; }
+            get => _books;
+            set => _books = value;
         }
     }
 
     private class Book
     {
-        private string _book;
+        private string _bookName;
         private List<Chapter> _chapters;
-        public string book 
+        
+        public string BookName 
         { 
-            get { return _book; }
-            set { _book = value; }
+            get => _bookName;
+            set => _bookName = value;
         }
-        public List<Chapter> chapters
+        
+        public List<Chapter> Chapters
         {
-            get { return _chapters; }
-            set { _chapters = value; }
+            get => _chapters;
+            set => _chapters = value;
         }
     }
 
     private class Chapter
     {
-        private int _chapter;
+        private int _chapterNumber;
         private string _reference;
         private List<Verse> _verses;
-        public int chapter
+        
+        public int ChapterNumber
         {
-            get { return _chapter; }
-            set { _chapter = value; }
+            get => _chapterNumber;
+            set => _chapterNumber = value;
         }
-        public string reference
+        
+        public string Reference
         {
-            get { return _reference; }
-            set { _reference = value; }
+            get => _reference;
+            set => _reference = value;
         }
-        public List<Verse> verses
+        
+        public List<Verse> Verses
         {
-            get { return _verses; }
-            set { _verses = value; }
+            get => _verses;
+            set => _verses = value;
         }
     }
 
@@ -54,21 +59,24 @@ public class ScriptureLoader
     {
         private string _reference;
         private string _text;
-        private int _verse;
-        public string reference
+        private int _verseNumber;
+        
+        public string Reference
         {
-            get { return _reference; }
-            set { _reference = value; }
+            get => _reference;
+            set => _reference = value;
         }
-        public string text
+        
+        public string Text
         {
-            get { return _text; }
-            set { _text = value; }
+            get => _text;
+            set => _text = value;
         }
-        public int verse
+        
+        public int VerseNumber
         {
-            get { return _verse; }
-            set { _verse = value; }
+            get => _verseNumber;
+            set => _verseNumber = value;
         }
     }
 
@@ -88,30 +96,30 @@ public class ScriptureLoader
             var scriptureData = _loadedScriptures[filePath];
             
             // Select a random book
-            var book = scriptureData.books[_random.Next(scriptureData.books.Count)];
+            var book = scriptureData.Books[_random.Next(scriptureData.Books.Count)];
             
             // Select a random chapter
-            var chapter = book.chapters[_random.Next(book.chapters.Count)];
+            var chapter = book.Chapters[_random.Next(book.Chapters.Count)];
             
             // Decide if we want a single verse or multiple verses (30% chance of multiple)
             bool multipleVerses = _random.NextDouble() < 0.3;
             
-            if (multipleVerses && chapter.verses.Count > 1)
+            if (multipleVerses && chapter.Verses.Count > 1)
             {
                 // Select 2-4 consecutive verses
-                int verseCount = _random.Next(2, Math.Min(5, chapter.verses.Count));
-                int startVerseIndex = _random.Next(0, chapter.verses.Count - verseCount + 1);
-                var selectedVerses = chapter.verses.Skip(startVerseIndex).Take(verseCount).ToList();
+                int verseCount = _random.Next(2, Math.Min(5, chapter.Verses.Count));
+                int startVerseIndex = _random.Next(0, chapter.Verses.Count - verseCount + 1);
+                var selectedVerses = chapter.Verses.Skip(startVerseIndex).Take(verseCount).ToList();
                 
                 // Combine the verses' text
-                string combinedText = string.Join(" ", selectedVerses.Select(v => v.text));
+                string combinedText = string.Join(" ", selectedVerses.Select(v => v.Text));
                 
                 return new Scripture(
                     new Reference(
-                        book.book,
-                        chapter.chapter,
-                        selectedVerses[0].verse,
-                        selectedVerses[^1].verse
+                        book.BookName,
+                        chapter.ChapterNumber,
+                        selectedVerses[0].VerseNumber,
+                        selectedVerses[^1].VerseNumber
                     ),
                     combinedText
                 );
@@ -119,11 +127,11 @@ public class ScriptureLoader
             else
             {
                 // Select a single verse
-                var verse = chapter.verses[_random.Next(chapter.verses.Count)];
+                var verse = chapter.Verses[_random.Next(chapter.Verses.Count)];
                 
                 return new Scripture(
-                    new Reference(book.book, chapter.chapter, verse.verse),
-                    verse.text
+                    new Reference(book.BookName, chapter.ChapterNumber, verse.VerseNumber),
+                    verse.Text
                 );
             }
         }
