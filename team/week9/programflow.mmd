@@ -1,0 +1,50 @@
+flowchart TD
+    A[Start Program] --> B[Display Main Menu]
+    B --> C{User Selection}
+    
+    C -->|1| D[Create New Goal]
+    C -->|2| E[List Goals]
+    C -->|3| F[Record Event]
+    C -->|4| G[Save Goals]
+    C -->|5| H[Load Goals]
+    C -->|6| Z[Quit]
+    
+    D --> I{Goal Type}
+    I -->|Simple| J[Create Simple Goal]
+    I -->|Eternal| K[Create Eternal Goal]
+    I -->|Checklist| L[Create Checklist Goal]
+    
+    J --> M[Enter Name]
+    K --> M
+    L --> M
+    
+    M --> N[Enter Description]
+    N --> O[Enter Points]
+    
+    O --> P{Is Checklist?}
+    P -->|No| Q[Add Goal to List]
+    P -->|Yes| R[Enter Target Count]
+    R --> S[Enter Bonus Points]
+    S --> Q
+    
+    Q --> B
+    
+    E --> T[Display All Goals]
+    T --> U[Show Completion Status]
+    U --> B
+    
+    F --> V[Show Goal List]
+    V --> W[Select Goal]
+    W --> X[Call RecordEvent Method]
+    X --> Y[Update Score]
+    Y --> B
+    
+    G --> G1[Enter Filename]
+    G1 --> G2[Write Goals to File]
+    G2 --> B
+    
+    H --> H1[Enter Filename]
+    H1 --> H2[Read Goals from File]
+    H2 --> B
+    
+    Z --> Z1[End Program]

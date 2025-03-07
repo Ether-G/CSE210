@@ -1,0 +1,63 @@
+sequenceDiagram
+    participant Main
+    participant GoalManager
+    participant Goal
+    participant SimpleGoal
+    participant EternalGoal
+    participant ChecklistGoal
+    
+    Main->>GoalManager: Create GoalManager
+    
+    Note over Main,ChecklistGoal: Create Goal Flow
+    Main->>GoalManager: CreateSimpleGoal()
+    GoalManager->>SimpleGoal: new SimpleGoal(name, description, points)
+    SimpleGoal->>Goal: base constructor
+    GoalManager->>GoalManager: AddGoal(goal)
+    
+    Note over Main,ChecklistGoal: Record Event Flow
+    Main->>GoalManager: RecordEvent()
+    GoalManager->>GoalManager: DisplayGoals()
+    GoalManager->>Main: Prompt for goal selection
+    Main->>GoalManager: Goal index
+    GoalManager->>SimpleGoal: RecordEvent()
+    alt Simple Goal
+        SimpleGoal->>SimpleGoal: _isComplete = true
+        SimpleGoal->>GoalManager: Return points
+    else Eternal Goal
+        GoalManager->>EternalGoal: RecordEvent()
+        EternalGoal->>GoalManager: Return points
+    else Checklist Goal
+        GoalManager->>ChecklistGoal: RecordEvent()
+        ChecklistGoal->>ChecklistGoal: _count++
+        ChecklistGoal->>ChecklistGoal: Check if _count == _target
+        ChecklistGoal->>GoalManager: Return points + bonus if target reached
+    end
+    GoalManager->>GoalManager: AddToScore(points)
+    
+    Note over Main,ChecklistGoal: Display Goals Flow
+    Main->>GoalManager: DisplayGoals()
+    GoalManager->>SimpleGoal: GetDetailsString()
+    SimpleGoal->>GoalManager: "[ ] Name - Description"
+    GoalManager->>EternalGoal: GetDetailsString()
+    EternalGoal->>GoalManager: "[ ] Name - Description"
+    GoalManager->>ChecklistGoal: GetDetailsString()
+    ChecklistGoal->>GoalManager: "[ ] Name - Description (count/target)"
+    GoalManager->>Main: Display formatted goal list
+    
+    Note over Main,ChecklistGoal: Save Goals Flow
+    Main->>GoalManager: SaveGoals(filename)
+    GoalManager->>SimpleGoal: GetStringRepresentation()
+    SimpleGoal->>GoalManager: "SimpleGoal:name:description:points:isComplete"
+    GoalManager->>EternalGoal: GetStringRepresentation()
+    EternalGoal->>GoalManager: "EternalGoal:name:description:points"
+    GoalManager->>ChecklistGoal: GetStringRepresentation()
+    ChecklistGoal->>GoalManager: "ChecklistGoal:name:description:points:target:bonus:count"
+    GoalManager->>Main: Write to file
+    
+    Note over Main,ChecklistGoal: Load Goals Flow
+    Main->>GoalManager: LoadGoals(filename)
+    GoalManager->>GoalManager: Read from file
+    GoalManager->>GoalManager: Parse goal strings
+    GoalManager->>GoalManager: CreateGoalFromString for each goal
+    GoalManager->>GoalManager: AddGoal(goal)
+    GoalManager->>Main: Display loaded goals

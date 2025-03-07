@@ -1,0 +1,70 @@
+classDiagram
+    class Goal {
+        -string _name
+        -string _description
+        -int _points
+        -bool _isComplete
+        +Goal(string name, string description, int points)
+        +string GetName()
+        +string GetDescription()
+        +int GetPoints()
+        +bool IsComplete()
+        +virtual string GetStringRepresentation()
+        +virtual void SaveToList(List~string~ list)
+        +abstract int RecordEvent()
+        +abstract string GetDetailsString()
+    }
+    
+    class SimpleGoal {
+        +SimpleGoal(string name, string description, int points)
+        +SimpleGoal(string name, string description, int points, bool isComplete)
+        +override int RecordEvent()
+        +override string GetDetailsString()
+        +override string GetStringRepresentation()
+        +override void SaveToList(List~string~ list)
+    }
+    
+    class EternalGoal {
+        +EternalGoal(string name, string description, int points)
+        +override int RecordEvent()
+        +override string GetDetailsString()
+        +override string GetStringRepresentation()
+        +override void SaveToList(List~string~ list)
+    }
+    
+    class ChecklistGoal {
+        -int _target
+        -int _bonus
+        -int _count
+        +ChecklistGoal(string name, string description, int points, int target, int bonus)
+        +ChecklistGoal(string name, string description, int points, int target, int bonus, int count)
+        +int GetTarget()
+        +int GetBonus()
+        +int GetCount()
+        +override int RecordEvent()
+        +override string GetDetailsString()
+        +override string GetStringRepresentation()
+        +override void SaveToList(List~string~ list)
+    }
+    
+    class GoalManager {
+        -List~Goal~ _goals
+        -int _score
+        +GoalManager()
+        +void AddGoal(Goal goal)
+        +void CreateSimpleGoal()
+        +void CreateEternalGoal()
+        +void CreateChecklistGoal()
+        +void DisplayGoals()
+        +void RecordEvent()
+        +int GetScore()
+        +void AddToScore(int points)
+        +void SaveGoals(string filename)
+        +void LoadGoals(string filename)
+        -Goal CreateGoalFromString(string goalString)
+    }
+    
+    Goal <|-- SimpleGoal
+    Goal <|-- EternalGoal
+    Goal <|-- ChecklistGoal
+    GoalManager o-- Goal
