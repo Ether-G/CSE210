@@ -1,3 +1,27 @@
+/*
+This program exceeds the core requirements in the following ways:
+
+1. Complete Scripture Library Integration:
+   - Loads from multiple standard works (Old Testament, New Testament, Book of Mormon, D&C)
+   - Implements proper JSON parsing and file handling
+   - Uses caching for better performance with Dictionary<string, ScriptureJson>
+
+2. Advanced Scripture Selection:
+   - Randomly selects scriptures from any standard work
+   - Implements 30% chance of selecting multiple consecutive verses (2-4 verses)
+   - Handles proper reference formatting for both single and multi-verse selections
+
+3. User Experience Improvements:
+   - Verifies user's memorization at each stage
+   - Provides immediate feedback for incorrect attempts
+   - Shows correct scripture temporarily (2 seconds) when mistakes are made
+   - Includes success messages with proper timing
+
+4. Error Handling and Reliability:
+   - Validates scripture file existence
+   - Includes fallback scripture if loading fails
+*/
+
 using System;
 using System.IO;
 

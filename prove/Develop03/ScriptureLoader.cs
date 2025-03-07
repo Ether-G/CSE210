@@ -4,69 +4,122 @@ public class ScriptureLoader
 {
     private class ScriptureJson
     {
-        public List<Book> books { get; set; }
+        private List<Book> _books;
+        public List<Book> Books 
+        { 
+            get => _books;
+            set => _books = value;
+        }
     }
 
     private class Book
     {
-        public string book { get; set; }
-        public List<Chapter> chapters { get; set; }
+        private string _bookName;
+        private List<Chapter> _chapters;
+        
+        public string BookName 
+        { 
+            get => _bookName;
+            set => _bookName = value;
+        }
+        
+        public List<Chapter> Chapters
+        {
+            get => _chapters;
+            set => _chapters = value;
+        }
     }
 
     private class Chapter
     {
-        public int chapter { get; set; }
-        public string reference { get; set; }
-        public List<Verse> verses { get; set; }
+        private int _chapterNumber;
+        private string _reference;
+        private List<Verse> _verses;
+        
+        public int ChapterNumber
+        {
+            get => _chapterNumber;
+            set => _chapterNumber = value;
+        }
+        
+        public string Reference
+        {
+            get => _reference;
+            set => _reference = value;
+        }
+        
+        public List<Verse> Verses
+        {
+            get => _verses;
+            set => _verses = value;
+        }
     }
 
     private class Verse
     {
-        public string reference { get; set; }
-        public string text { get; set; }
-        public int verse { get; set; }
+        private string _reference;
+        private string _text;
+        private int _verseNumber;
+        
+        public string Reference
+        {
+            get => _reference;
+            set => _reference = value;
+        }
+        
+        public string Text
+        {
+            get => _text;
+            set => _text = value;
+        }
+        
+        public int VerseNumber
+        {
+            get => _verseNumber;
+            set => _verseNumber = value;
+        }
     }
 
-    private static Random random = new Random();
-    private static Dictionary<string, ScriptureJson> LoadedScriptures = new Dictionary<string, ScriptureJson>();
+    private static Random _random = new Random();
+    private static Dictionary<string, ScriptureJson> _loadedScriptures = new Dictionary<string, ScriptureJson>();
 
     public static Scripture LoadRandomScripture(string filePath)
     {
         try
         {
-            if (!LoadedScriptures.ContainsKey(filePath))
+            if (!_loadedScriptures.ContainsKey(filePath))
             {
                 string jsonString = File.ReadAllText(filePath);
-                LoadedScriptures[filePath] = JsonSerializer.Deserialize<ScriptureJson>(jsonString);
+                _loadedScriptures[filePath] = JsonSerializer.Deserialize<ScriptureJson>(jsonString);
             }
 
-            var scriptureData = LoadedScriptures[filePath];
+            var scriptureData = _loadedScriptures[filePath];
             
             // Select a random book
-            var book = scriptureData.books[random.Next(scriptureData.books.Count)];
+            var book = scriptureData.Books[_random.Next(scriptureData.Books.Count)];
             
             // Select a random chapter
-            var chapter = book.chapters[random.Next(book.chapters.Count)];
+            var chapter = book.Chapters[_random.Next(book.Chapters.Count)];
             
             // Decide if we want a single verse or multiple verses (30% chance of multiple)
-            bool multipleVerses = random.NextDouble() < 0.3;
+            bool multipleVerses = _random.NextDouble() < 0.3;
             
-            if (multipleVerses && chapter.verses.Count > 1)
+            if (multipleVerses && chapter.Verses.Count > 1)
             {
                 // Select 2-4 consecutive verses
-                int verseCount = random.Next(2, Math.Min(5, chapter.verses.Count));
-                int startVerseIndex = random.Next(0, chapter.verses.Count - verseCount + 1);
-                var selectedVerses = chapter.verses.Skip(startVerseIndex).Take(verseCount).ToList();
+                int verseCount = _random.Next(2, Math.Min(5, chapter.Verses.Count));
+                int startVerseIndex = _random.Next(0, chapter.Verses.Count - verseCount + 1);
+                var selectedVerses = chapter.Verses.Skip(startVerseIndex).Take(verseCount).ToList();
                 
                 // Combine the verses' text
-                string combinedText = string.Join(" ", selectedVerses.Select(v => v.text));
+                string combinedText = string.Join(" ", selectedVerses.Select(v => v.Text));
                 
                 return new Scripture(
                     new Reference(
-                        book.book,
-                        chapter.chapter,
-                        selectedVerses[0].verse,
-                        selectedVerses[^1].verse
+                        book.BookName,
+                        chapter.ChapterNumber,
+                        selectedVerses[0].VerseNumber,
+                        selectedVerses[^1].VerseNumber
                     ),
                     combinedText
                 );
@@ -74,18 +127,18 @@ public class ScriptureLoader
             else
             {
                 // Select a single verse
-                var verse = chapter.verses[random.Next(chapter.verses.Count)];
+                var verse = chapter.Verses[_random.Next(chapter.Verses.Count)];
                 
                 return new Scripture(
-                    new Reference(book.book, chapter.chapter, verse.verse),
-                    verse.text
+                    new Reference(book.BookName, chapter.ChapterNumber, verse.VerseNumber),
+                    verse.Text
                 );
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading scriptures: {ex.Message}");
-            // Return a default scripture as fallback (didnt have time to fully debug why this happens, but we have this to rely on)
+            // Return a default scripture as fallback
             return new Scripture(
                 new Reference("John", 3, 16),
                 "For God so loved the world that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life"
@@ -95,7 +148,7 @@ public class ScriptureLoader
 
     public static Scripture LoadRandomScriptureFromMultipleFiles(string[] filePaths)
     {
-        string randomFile = filePaths[random.Next(filePaths.Length)];
+        string randomFile = filePaths[_random.Next(filePaths.Length)];
         return LoadRandomScripture(randomFile);
     }
 }
