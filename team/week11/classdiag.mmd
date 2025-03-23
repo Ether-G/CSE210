@@ -1,0 +1,151 @@
+classDiagram
+    %% Vector and Matrix classes
+    class Vector4D {
+        +float X
+        +float Y
+        +float Z
+        +float W
+        +Vector4D Add(Vector4D other)
+        +Vector4D Subtract(Vector4D other)
+        +float DotProduct(Vector4D other)
+        +float Magnitude()
+        +Vector4D Normalize()
+        +Vector3D ProjectTo3D(float viewerDistance)
+    }
+    
+    class Vector3D {
+        +float X
+        +float Y
+        +float Z
+        +Vector3D Add(Vector3D other)
+        +Vector3D Subtract(Vector3D other)
+        +Vector3D CrossProduct(Vector3D other)
+        +float DotProduct(Vector3D other)
+        +float Magnitude()
+        +Vector3D Normalize()
+        +Vector2D ProjectTo2D(float viewerDistance)
+    }
+    
+    class Vector2D {
+        +float X
+        +float Y
+        +Vector2D Add(Vector2D other)
+        +Vector2D Subtract(Vector2D other)
+        +System.Drawing.Point ToPoint()
+    }
+    
+    class Matrix4D {
+        +float[,] Matrix
+        +Matrix4D Multiply(Matrix4D other)
+        +Vector4D Transform(Vector4D vector)
+        +Matrix4D CreateIdentity()
+        +Matrix4D CreateRotationXY(float angle)
+        +Matrix4D CreateRotationXZ(float angle)
+        +Matrix4D CreateRotationXW(float angle)
+        +Matrix4D CreateRotationYZ(float angle)
+        +Matrix4D CreateRotationYW(float angle)
+        +Matrix4D CreateRotationZW(float angle)
+        +Matrix4D CreateTranslation(Vector4D translation)
+    }
+    
+    %% 4D Objects
+    class Object4D {
+        <<abstract>>
+        +Vector4D Position
+        +List~Vector4D~ Vertices
+        +List~Edge4D~ Edges
+        +Matrix4D Transformation
+        +void ApplyTransformation(Matrix4D transform)
+        +List~Vector3D~ ProjectTo3D(float viewerDistance)
+        +abstract void GenerateGeometry()
+        +void Update(float deltaTime)
+        +void Render(Renderer renderer)
+    }
+    
+    class Tesseract {
+        +float Size
+        +override void GenerateGeometry()
+        +override void Render(Renderer renderer)
+    }
+    
+    class Hypersphere {
+        +float Radius
+        +int Resolution
+        +override void GenerateGeometry()
+        +override void Render(Renderer renderer)
+    }
+    
+    class Edge4D {
+        +int StartVertexIndex
+        +int EndVertexIndex
+        +System.Drawing.Color Color
+        +void Render(Renderer renderer, List~Vector2D~ projectedVertices)
+    }
+    
+    %% Camera and Rendering
+    class Camera4D {
+        +Vector4D Position
+        +float ViewerDistance
+        +float Screen3DDistance
+        +Vector3D ProjectTo3D(Vector4D point)
+        +Vector2D ProjectTo2D(Vector3D point)
+        +void Move(Vector4D direction)
+    }
+    
+    class Renderer {
+        +System.Drawing.Bitmap Canvas
+        +System.Drawing.Graphics Graphics
+        +Camera4D Camera
+        +int Width
+        +int Height
+        +void Clear(System.Drawing.Color color)
+        +void DrawLine(Vector2D start, Vector2D end, System.Drawing.Color color)
+        +void DrawPoint(Vector2D point, System.Drawing.Color color, int size)
+        +void RenderObject(Object4D object)
+        +void Present()
+    }
+    
+    %% Scene Management
+    class Scene4D {
+        +List~Object4D~ Objects
+        +Camera4D Camera
+        +void AddObject(Object4D object)
+        +void RemoveObject(Object4D object)
+        +void Update(float deltaTime)
+        +void Render(Renderer renderer)
+    }
+    
+    class Engine4D {
+        +Scene4D Scene
+        +Renderer Renderer
+        +float[] RotationAngles
+        +float RotationSpeed
+        +void Initialize()
+        +void Update(float deltaTime)
+        +void Render()
+        +void ProcessInput(Input input)
+        +void RotateObjects()
+    }
+    
+    %% Relationships
+    Object4D <|-- Tesseract
+    Object4D <|-- Hypersphere
+    
+    Object4D *-- "many" Edge4D
+    Object4D *-- "many" Vector4D
+    Object4D o-- Matrix4D
+    
+    Scene4D o-- "1" Camera4D
+    Scene4D *-- "many" Object4D
+    
+    Engine4D *-- "1" Scene4D
+    Engine4D *-- "1" Renderer
+    
+    Renderer o-- "1" Camera4D
+    
+    Vector4D --> Vector3D : projects to
+    Vector3D --> Vector2D : projects to
+    
+    Camera4D --> Vector4D : uses
+    Camera4D --> Vector3D : uses
+    Camera4D --> Vector2D : uses
